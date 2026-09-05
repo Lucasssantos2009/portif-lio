@@ -1,0 +1,532 @@
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfólio profissional de desenvolvimento web, programação, Inteligência Artificial, automação, chatbots e engenharia de prompts.">
+  <meta name="theme-color" content="#080a0f">
+  <title>[SEU NOME] — Web, IA & Automação</title>
+
+  <style>
+    :root{
+      --bg:#080a0f;
+      --bg-soft:#0d1118;
+      --panel:rgba(18,23,32,.72);
+      --panel-solid:#111722;
+      --text:#f3f6fb;
+      --muted:#9ca8b8;
+      --line:rgba(255,255,255,.09);
+      --primary:#7c8cff;
+      --cyan:#55d6ff;
+      --purple:#b07cff;
+      --radius:22px;
+      --max:1180px;
+      --shadow:0 20px 60px rgba(0,0,0,.28);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 15% 10%,rgba(124,140,255,.12),transparent 30%),
+        radial-gradient(circle at 85% 20%,rgba(85,214,255,.08),transparent 28%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.6;
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";
+      position:fixed;inset:0;pointer-events:none;opacity:.18;
+      background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+                       linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+      background-size:55px 55px;
+      mask-image:linear-gradient(to bottom,black,transparent 80%);
+    }
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+    .container{width:min(var(--max),calc(100% - 40px));margin:auto}
+    .section{padding:105px 0;position:relative}
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:9px;
+      color:#c6cdfd;font-size:.78rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+      margin-bottom:16px
+    }
+    .eyebrow::before{content:"";width:25px;height:1px;background:linear-gradient(90deg,var(--cyan),var(--primary))}
+    h1,h2,h3{line-height:1.1;letter-spacing:-.035em}
+    h2{font-size:clamp(2rem,4vw,3.4rem);max-width:760px}
+    .section-head{margin-bottom:45px}
+    .section-head p{color:var(--muted);max-width:650px;margin-top:16px;font-size:1.02rem}
+
+    /* Header */
+    header{
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      background:rgba(8,10,15,.68);backdrop-filter:blur(18px);
+      border-bottom:1px solid transparent;transition:.3s
+    }
+    header.scrolled{border-color:var(--line);background:rgba(8,10,15,.88)}
+    nav{height:76px;display:flex;align-items:center;justify-content:space-between}
+    .logo{font-weight:900;letter-spacing:-.04em;font-size:1.05rem}
+    .logo span{color:var(--cyan)}
+    .nav-links{display:flex;gap:27px;align-items:center;list-style:none}
+    .nav-links a{font-size:.88rem;color:#aeb8c8;transition:.2s}
+    .nav-links a:hover,.nav-links a.active{color:#fff}
+    .menu-btn{display:none;background:none;border:0;color:white;font-size:1.5rem;cursor:pointer}
+
+    /* Hero */
+    .hero{min-height:100vh;display:grid;place-items:center;padding-top:90px}
+    .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:65px;align-items:center}
+    .hero h1{font-size:clamp(3rem,7vw,6.4rem);max-width:850px}
+    .gradient-text{
+      background:linear-gradient(100deg,#fff 10%,#9daaff 48%,#63dcff 90%);
+      -webkit-background-clip:text;background-clip:text;color:transparent
+    }
+    .hero-copy{font-size:1.08rem;color:var(--muted);max-width:670px;margin:24px 0 30px}
+    .actions{display:flex;gap:13px;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:9px;
+      padding:13px 19px;border-radius:13px;border:1px solid var(--line);
+      font-weight:800;font-size:.9rem;transition:.25s;cursor:pointer
+    }
+    .btn.primary{background:linear-gradient(135deg,var(--primary),#6677ff);border-color:transparent;color:white}
+    .btn.secondary{background:rgba(255,255,255,.035)}
+    .btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(86,102,255,.18)}
+    .hero-meta{display:flex;gap:25px;margin-top:42px;color:#7f8a9c;font-size:.8rem}
+    .hero-meta strong{display:block;color:#e9edf4;font-size:.95rem}
+
+    .terminal{
+      border:1px solid var(--line);border-radius:25px;background:rgba(13,17,24,.82);
+      box-shadow:var(--shadow);overflow:hidden;transform:perspective(900px) rotateY(-3deg)
+    }
+    .terminal-top{height:44px;display:flex;align-items:center;gap:7px;padding:0 15px;border-bottom:1px solid var(--line)}
+    .dot{width:9px;height:9px;border-radius:50%;background:#657083}
+    .terminal-title{margin:auto;color:#697486;font:600 .7rem ui-monospace,SFMono-Regular,Menlo,monospace}
+    .code{padding:25px;font:500 .83rem/1.9 ui-monospace,SFMono-Regular,Menlo,monospace;color:#aeb9c9}
+    .code .purple{color:#c18cff}.code .blue{color:#6fdfff}.code .green{color:#8ee8a5}.code .white{color:#f3f6fb}.code .muted{color:#697587}
+    .cursor{display:inline-block;width:7px;height:15px;background:var(--cyan);vertical-align:middle;animation:blink 1s infinite}
+    @keyframes blink{50%{opacity:0}}
+
+    /* Cards */
+    .grid{display:grid;gap:17px}
+    .skills-grid{grid-template-columns:repeat(2,1fr)}
+    .card{
+      background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
+      border:1px solid var(--line);border-radius:var(--radius);padding:27px;
+      transition:.3s;position:relative;overflow:hidden
+    }
+    .card::after{
+      content:"";position:absolute;width:130px;height:130px;right:-60px;top:-70px;
+      background:radial-gradient(circle,rgba(124,140,255,.16),transparent 68%);pointer-events:none
+    }
+    .card:hover{transform:translateY(-5px);border-color:rgba(124,140,255,.28);box-shadow:var(--shadow)}
+    .icon{
+      width:43px;height:43px;border-radius:13px;display:grid;place-items:center;
+      background:rgba(124,140,255,.11);border:1px solid rgba(124,140,255,.17);
+      color:#aeb7ff;font-weight:900;margin-bottom:18px
+    }
+    .card h3{font-size:1.2rem;margin-bottom:8px}
+    .card p{color:var(--muted);font-size:.9rem}
+    .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:17px}
+    .tag{font-size:.72rem;color:#b7c0ce;border:1px solid var(--line);padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.025)}
+
+    .tech-layout{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+    .tech-card h3{font-size:1.05rem}
+    .tech-list{list-style:none;margin-top:18px;display:grid;gap:8px;color:#aab4c3;font-size:.86rem}
+    .tech-list li::before{content:"▹";color:var(--cyan);margin-right:9px}
+
+    /* Projects */
+    .projects-grid{grid-template-columns:repeat(2,1fr)}
+    .project{padding:0;min-height:320px;display:flex;flex-direction:column}
+    .project-visual{
+      height:145px;display:grid;place-items:center;border-bottom:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(124,140,255,.18),transparent 45%),
+        linear-gradient(135deg,#101722,#0b0e15);
+      color:#8794ff;font-size:2.1rem
+    }
+    .project-body{padding:22px;display:flex;flex-direction:column;flex:1}
+    .project-category{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:#7f8cff;font-weight:800}
+    .project h3{margin:8px 0;font-size:1.2rem}
+    .project p{color:var(--muted);font-size:.86rem}
+    .project .tags{margin-top:auto;padding-top:18px}
+    .project-actions{display:flex;gap:9px;margin-top:17px}
+    .small-btn{font-size:.76rem;padding:8px 11px;border-radius:9px}
+
+    /* AI */
+    .ai-section{overflow:hidden}
+    .ai-shell{
+      border:1px solid var(--line);border-radius:30px;padding:38px;
+      background:linear-gradient(145deg,rgba(124,140,255,.08),rgba(85,214,255,.025) 45%,rgba(255,255,255,.02));
+    }
+    .ai-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;align-items:center}
+    .ai-intro p{color:var(--muted);margin-top:17px}
+    .ai-items{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+    .ai-item{padding:15px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.15)}
+    .ai-item strong{font-size:.87rem}.ai-item span{display:block;color:#7f8a9c;font-size:.74rem;margin-top:3px}
+    .flow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:35px}
+    .flow span{padding:10px 13px;border-radius:12px;background:rgba(255,255,255,.045);border:1px solid var(--line);font-size:.78rem;color:#c3ccda}
+    .flow b{color:#6474ff}
+
+    /* Timeline */
+    .timeline{position:relative;max-width:850px;margin:auto}
+    .timeline::before{content:"";position:absolute;left:13px;top:0;bottom:0;width:1px;background:linear-gradient(var(--primary),rgba(124,140,255,.05))}
+    .step{display:grid;grid-template-columns:27px 1fr;gap:23px;margin-bottom:29px}
+    .node{width:27px;height:27px;border-radius:50%;border:1px solid rgba(124,140,255,.5);background:#0b0f16;box-shadow:0 0 0 5px rgba(124,140,255,.05);z-index:1}
+    .step-content{padding:18px 20px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.025)}
+    .step-content strong{font-size:.95rem}.step-content p{color:var(--muted);font-size:.82rem;margin-top:4px}
+
+    /* Contact */
+    .contact{text-align:center;padding-bottom:120px}
+    .contact-box{padding:65px 30px;border:1px solid var(--line);border-radius:30px;background:radial-gradient(circle at 50% 0,rgba(124,140,255,.14),transparent 50%),rgba(255,255,255,.02)}
+    .contact h2{margin:auto}
+    .contact p{color:var(--muted);max-width:590px;margin:17px auto 27px}
+    footer{border-top:1px solid var(--line);padding:25px 0;color:#687486;font-size:.75rem}
+    footer .container{display:flex;justify-content:space-between;gap:20px}
+
+    .reveal{opacity:0;transform:translateY(25px);transition:opacity .65s ease,transform .65s ease}
+    .reveal.visible{opacity:1;transform:none}
+    :focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}
+      *{animation:none!important;transition:none!important}
+    }
+
+    @media(max-width:900px){
+      .hero-grid,.ai-grid{grid-template-columns:1fr}
+      .terminal{max-width:700px;margin:auto}
+      .tech-layout{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:700px){
+      .container{width:min(var(--max),calc(100% - 28px))}
+      .section{padding:78px 0}
+      .nav-links{
+        position:absolute;top:76px;left:14px;right:14px;display:none;
+        flex-direction:column;align-items:stretch;padding:15px;border:1px solid var(--line);
+        border-radius:17px;background:rgba(12,16,23,.97)
+      }
+      .nav-links.open{display:flex}.nav-links a{padding:11px}
+      .menu-btn{display:block}
+      .hero{min-height:auto;padding:145px 0 80px}
+      .hero h1{font-size:clamp(2.8rem,15vw,4.7rem)}
+      .hero-meta{gap:15px;flex-wrap:wrap}
+      .skills-grid,.projects-grid,.tech-layout{grid-template-columns:1fr}
+      .ai-shell{padding:25px 19px}.ai-items{grid-template-columns:1fr}
+      .flow{gap:7px}.flow b{display:none}
+      footer .container{flex-direction:column}
+    }
+  </style>
+</head>
+
+<body>
+<header id="header">
+  <div class="container">
+    <nav aria-label="Navegação principal">
+      <a class="logo" href="#inicio" aria-label="Ir para o início">[SEU<span>NOME</span>]</a>
+      <button class="menu-btn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false">☰</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#inicio">Início</a></li>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#tecnologias">Tecnologias</a></li>
+        <li><a href="#projetos">Projetos</a></li>
+        <li><a href="#ia">Inteligência Artificial</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="inicio">
+    <div class="container hero-grid">
+      <div class="reveal">
+        <span class="eyebrow">Portfólio • Tecnologia & IA</span>
+        <h1>Desenvolvimento Web, <span class="gradient-text">Inteligência Artificial</span> e Automação.</h1>
+        <p class="hero-copy">
+          Construo projetos e soluções utilizando desenvolvimento web, programação, APIs de Inteligência Artificial,
+          chatbots, automação e engenharia de prompts.
+        </p>
+        <div class="actions">
+          <a class="btn primary" href="#projetos">Ver projetos <span>↗</span></a>
+          <a class="btn secondary" href="#tecnologias">Conhecer minhas habilidades</a>
+        </div>
+        <div class="hero-meta">
+          <div><strong>Web</strong>Interfaces & aplicações</div>
+          <div><strong>IA</strong>Modelos & prompting</div>
+          <div><strong>Automação</strong>Soluções práticas</div>
+        </div>
+      </div>
+
+      <div class="terminal reveal" aria-label="Representação visual de código">
+        <div class="terminal-top">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="terminal-title">portfolio.js</span>
+        </div>
+        <pre class="code"><span class="purple">const</span> <span class="white">developer</span> = {
+  <span class="blue">focus</span>: [
+    <span class="green">"Web"</span>,
+    <span class="green">"Artificial Intelligence"</span>,
+    <span class="green">"Automation"</span>
+  ],
+  <span class="blue">tools</span>: [
+    <span class="green">"JavaScript"</span>,
+    <span class="green">"Python"</span>,
+    <span class="green">"Java"</span>
+  ],
+  <span class="blue">mindset</span>: <span class="green">"always learning"</span>
+};
+
+<span class="purple">return</span> <span class="white">buildSolutions</span>(developer); <span class="cursor"></span></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="sobre">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Sobre</span>
+        <h2>Aprender tecnologia é transformar conhecimento em projetos.</h2>
+        <p>
+          Tenho foco prático no desenvolvimento de projetos e na exploração de diferentes áreas da tecnologia,
+          conectando programação, desenvolvimento web, Inteligência Artificial, automação, chatbots e engenharia de prompts.
+        </p>
+      </div>
+      <div class="skills-grid grid">
+        <article class="card reveal"><div class="icon">&lt;/&gt;</div><h3>Desenvolvimento Web</h3><p>Criação de interfaces e aplicações web com HTML, CSS e JavaScript.</p></article>
+        <article class="card reveal"><div class="icon">AI</div><h3>Inteligência Artificial</h3><p>Exploração de IA generativa, APIs de modelos, prompting, RAG e Machine Learning.</p></article>
+        <article class="card reveal"><div class="icon">⚙</div><h3>Automação</h3><p>Construção de soluções para automatizar tarefas e conectar ferramentas e modelos de IA.</p></article>
+        <article class="card reveal"><div class="icon">↯</div><h3>Chatbots</h3><p>Desenvolvimento de experiências conversacionais utilizando Python e APIs de IA.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="tecnologias">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Stack</span>
+        <h2>Tecnologias & Conhecimentos</h2>
+        <p>Uma base multidisciplinar para criar, testar e evoluir soluções digitais.</p>
+      </div>
+
+      <div class="tech-layout">
+        <article class="card tech-card reveal">
+          <div class="icon">WEB</div><h3>Desenvolvimento Web</h3>
+          <ul class="tech-list">
+            <li>HTML</li><li>CSS</li><li>JavaScript</li>
+            <li>Jogo da Cobrinha</li><li>Portfólio Web</li><li>Interface inspirada no ChatGPT com API</li>
+          </ul>
+        </article>
+
+        <article class="card tech-card reveal">
+          <div class="icon">PY</div><h3>Python</h3>
+          <ul class="tech-list">
+            <li>Lógica de Programação</li><li>Pedra, Papel e Tesoura</li><li>Jogo de Adivinhação</li><li>Sorteador de jogos Mega-Sena</li>
+            <li>Chatbots</li>
+          </ul>
+        </article>
+
+        <article class="card tech-card reveal">
+          <div class="icon">JV</div><h3>Java</h3>
+          <ul class="tech-list">
+            <li>Programação</li><li>Aplicativo de relógio</li><li>Testes de componentes de interface</li>
+          </ul>
+        </article>
+
+        <article class="card tech-card reveal">
+          <div class="icon">AI</div><h3>Inteligência Artificial</h3>
+          <ul class="tech-list">
+            <li>APIs da Groq e OpenAI</li><li>Streamlit</li><li>Engenharia de Prompt</li><li>Machine Learning</li><li>IA Generativa</li><li>Zero-shot, One-shot e Few-shot</li><li>RAG</li>
+          </ul>
+        </article>
+
+        <article class="card tech-card reveal">
+          <div class="icon">DOC</div><h3>Automação</h3>
+          <ul class="tech-list">
+            <li>Geração automatizada de documentos</li><li>Integração com ChatGPT</li><li>Automação inteligente</li>
+          </ul>
+        </article>
+
+        <article class="card tech-card reveal">
+          <div class="icon">UI</div><h3>Prototipação</h3>
+          <ul class="tech-list">
+            <li>Layouts web</li><li>Interfaces</li><li>Google Stitch</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="projetos">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Projetos</span>
+        <h2>Projetos em Destaque</h2>
+        <p>Projetos práticos que representam diferentes etapas da minha evolução técnica.</p>
+      </div>
+
+      <div class="projects-grid grid">
+        <article class="card project reveal"><div class="project-visual">🐍</div><div class="project-body"><span class="project-category">Web • JavaScript</span><h3>Jogo da Cobrinha</h3><p>Jogo desenvolvido para praticar lógica, interação e manipulação de elementos no navegador.</p><div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div><div class="project-actions"><a class="btn small-btn secondary" href="#contato">Ver projeto</a><a class="btn small-btn secondary" href="#contato">Ver código</a></div></div></article>
+
+        <article class="card project reveal"><div class="project-visual">◈</div><div class="project-body"><span class="project-category">Web</span><h3>Portfólio Web</h3><p>Interface de portfólio criada para apresentar conhecimentos, projetos e evolução técnica.</p><div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div><div class="project-actions"><a class="btn small-btn secondary" href="#contato">Ver projeto</a><a class="btn small-btn secondary" href="#contato">Ver código</a></div></div></article>
+
+        <article class="card project reveal"><div class="project-visual">⌁ AI</div><div class="project-body"><span class="project-category">IA • API</span><h3>Interface ChatGPT com API</h3><p>Interface inspirada em chatbots modernos utilizando integração com API de modelo de IA.</p><div class="tags"><span class="tag">Web</span><span class="tag">API</span><span class="tag">IA</span></div><div class="project-actions"><a class="btn small-btn secondary" href="#contato">Ver projeto</a><a class="btn small-btn secondary" href="#contato">Ver código</a></div></div></article>
+
+        <article class="card project reveal"><div class="project-visual">✊</div><div class="project-body"><span class="project-category">Python</span><h3>Pedra, Papel e Tesoura</h3><p>Projeto de lógica de programação com interação e regras de jogo.</p><div class="tags"><span class="tag">Python</span><span class="tag">Lógica</span></div><div class="project-actions"><a class="btn small-btn secondary" href="#contato">Ver projeto</a><a class="btn small-btn secondary" href="#contato">Ver código</a></div></div></article>
+
+        <article class="card project reveal"><div class="project-visual">?</div><div class="project-body"><span class="project-category">Python</span><h3>Jogo de Adivinhação</h3><p>Aplicação simples para exercitar lógica, condições e interação com o usuário.</p><div class="tags"><span class="tag">Python</span><span class="tag">Lógica</span></div><div class="project-actions"><a class="btn small-btn secondary" href="#contato">Ver projeto</a><a class="btn small-btn secondary" href="#contato">Ver código</a></div></div></article>
+
+        <article class="card project reveal"><div class="project-visual">✦</div><div class="project-body"><span class="project-category">Python</span><h3>Sorteador de Jogos Mega-Sena</h3><p>Aplicação para geração de combinações aleatórias como exercício de programação.</p><div class="tags"><span class="tag">Python</span><span class="tag">Randomização</span></div><div class="project-actions"><a class="btn small-btn secondary" href="#contato">Ver projeto</a><a class="btn small-btn secondary" href="#contato">Ver código</a></div></div></article>
+
+        <article class="card project reveal"><div class="project-visual">◷</div><div class="project-body"><span class="project-category">Java</span><h3>Aplicativo Relógio</h3><p>Aplicativo desenvolvido em Java com foco em interface e componentes de interação.</p><div class="tags"><span class="tag">Java</span><span class="tag">UI</span></div><div class="project-actions"><a class="btn small-btn secondary" href="#contato">Ver projeto</a><a class="btn small-btn secondary" href="#contato">Ver código</a></div></div></article>
+
+        <article class="card project reveal"><div class="project-visual">◌</div><div class="project-body"><span class="project-category">IA • Python</span><h3>Chatbot com Python + API</h3><p>Experimentos de conversação conectando Python a APIs de modelos de Inteligência Artificial.</p><div class="tags"><span class="tag">Python</span><span class="tag">API</span><span class="tag">Chatbot</span></div><div class="project-actions"><a class="btn small-btn secondary" href="#contato">Ver projeto</a><a class="btn small-btn secondary" href="#contato">Ver código</a></div></div></article>
+
+        <article class="card project reveal"><div class="project-visual">▤</div><div class="project-body"><span class="project-category">Automação • IA</span><h3>Geração de Documentos</h3><p>Automação para geração de documentos utilizando recursos do ChatGPT.</p><div class="tags"><span class="tag">Automação</span><span class="tag">ChatGPT</span><span class="tag">IA</span></div><div class="project-actions"><a class="btn small-btn secondary" href="#contato">Ver projeto</a></div></div></article>
+
+        <article class="card project reveal"><div class="project-visual">✧</div><div class="project-body"><span class="project-category">IA Generativa</span><h3>Projetos de IA Generativa</h3><p>Explorações práticas envolvendo modelos generativos, prompting e aplicações de IA.</p><div class="tags"><span class="tag">GenAI</span><span class="tag">Prompting</span><span class="tag">RAG</span></div><div class="project-actions"><a class="btn small-btn secondary" href="#contato">Ver projeto</a></div></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section ai-section" id="ia">
+    <div class="container">
+      <div class="ai-shell reveal">
+        <div class="ai-grid">
+          <div class="ai-intro">
+            <span class="eyebrow">Inteligência Artificial</span>
+            <h2>Explorando o potencial da Inteligência Artificial.</h2>
+            <p>
+              Estudo conceitos e técnicas de IA buscando transformar modelos, prompts e APIs em aplicações úteis e experiências práticas.
+            </p>
+          </div>
+          <div class="ai-items">
+            <div class="ai-item"><strong>IA Generativa</strong><span>Modelos e aplicações generativas</span></div>
+            <div class="ai-item"><strong>Engenharia de Prompt</strong><span>Construção e refinamento de instruções</span></div>
+            <div class="ai-item"><strong>Zero-shot</strong><span>Execução sem exemplos</span></div>
+            <div class="ai-item"><strong>One-shot</strong><span>Uso de um exemplo como referência</span></div>
+            <div class="ai-item"><strong>Few-shot</strong><span>Uso de múltiplos exemplos</span></div>
+            <div class="ai-item"><strong>RAG</strong><span>Recuperação de informação para geração</span></div>
+            <div class="ai-item"><strong>Machine Learning</strong><span>Conceitos de aprendizado de máquina</span></div>
+            <div class="ai-item"><strong>APIs de IA</strong><span>Integração de modelos em aplicações</span></div>
+            <div class="ai-item"><strong>Chatbots</strong><span>Experiências conversacionais</span></div>
+            <div class="ai-item"><strong>Automação inteligente</strong><span>IA aplicada a fluxos de trabalho</span></div>
+          </div>
+        </div>
+        <div class="flow" aria-label="Fluxo de uma aplicação de IA">
+          <span>Prompt</span><b>→</b><span>Modelo de IA</span><b>→</b><span>Processamento</span><b>→</b><span>Aplicação</span><b>→</b><span>Resultado</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="jornada">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Jornada</span>
+        <h2>Uma evolução construída por etapas.</h2>
+        <p>Do fundamento da programação à exploração de aplicações modernas de Inteligência Artificial.</p>
+      </div>
+      <div class="timeline">
+        <div class="step reveal"><div class="node"></div><div class="step-content"><strong>Programação</strong><p>Fundamentos, lógica e construção de pequenos projetos.</p></div></div>
+        <div class="step reveal"><div class="node"></div><div class="step-content"><strong>Desenvolvimento Web</strong><p>Interfaces e aplicações com HTML, CSS e JavaScript.</p></div></div>
+        <div class="step reveal"><div class="node"></div><div class="step-content"><strong>APIs</strong><p>Integração entre aplicações e serviços externos.</p></div></div>
+        <div class="step reveal"><div class="node"></div><div class="step-content"><strong>Chatbots</strong><p>Experiências conversacionais conectadas a modelos de IA.</p></div></div>
+        <div class="step reveal"><div class="node"></div><div class="step-content"><strong>Automação</strong><p>Transformação de tarefas repetitivas em fluxos automatizados.</p></div></div>
+        <div class="step reveal"><div class="node"></div><div class="step-content"><strong>Engenharia de Prompt</strong><p>Estratégias para orientar modelos de IA de forma mais eficiente.</p></div></div>
+        <div class="step reveal"><div class="node"></div><div class="step-content"><strong>IA Generativa</strong><p>Exploração de modelos generativos e suas aplicações.</p></div></div>
+        <div class="step reveal"><div class="node"></div><div class="step-content"><strong>Machine Learning</strong><p>Estudo de conceitos relacionados ao aprendizado de máquina.</p></div></div>
+        <div class="step reveal"><div class="node"></div><div class="step-content"><strong>RAG</strong><p>Conhecimento sobre recuperação de informação para aplicações com IA.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section contact" id="contato">
+    <div class="container">
+      <div class="contact-box reveal">
+        <span class="eyebrow">Contato</span>
+        <h2>Vamos criar algo juntos?</h2>
+        <p>Estou aberto a oportunidades, projetos e desafios relacionados a desenvolvimento, automação e Inteligência Artificial.</p>
+        <div class="actions" style="justify-content:center">
+          <a class="btn primary" href="mailto:[SEU E-MAIL]">[SEU E-MAIL] ↗</a>
+          <a class="btn secondary" href="#" data-placeholder="[SEU GITHUB]">GitHub</a>
+          <a class="btn secondary" href="#" data-placeholder="[SEU LINKEDIN]">LinkedIn</a>
+          <a class="btn secondary" href="#" data-placeholder="[SEU WHATSAPP]">WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <span>© <span id="year"></span> [SEU NOME]. Portfólio pessoal.</span>
+    <span>Web • IA • Automação • Aprendizado contínuo</span>
+  </div>
+</footer>
+
+<script>
+  const header = document.getElementById("header");
+  const menuBtn = document.getElementById("menuBtn");
+  const navLinks = document.getElementById("navLinks");
+
+  window.addEventListener("scroll", () => {
+    header.classList.toggle("scrolled", window.scrollY > 20);
+  }, {passive:true});
+
+  menuBtn.addEventListener("click", () => {
+    const open = navLinks.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", open);
+    menuBtn.textContent = open ? "✕" : "☰";
+  });
+
+  document.querySelectorAll(".nav-links a").forEach(link => {
+    link.addEventListener("click", () => {
+      navLinks.classList.remove("open");
+      menuBtn.setAttribute("aria-expanded", "false");
+      menuBtn.textContent = "☰";
+    });
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {threshold:.12});
+
+  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+  document.querySelectorAll("[data-placeholder]").forEach(el => {
+    el.addEventListener("click", e => {
+      e.preventDefault();
+      alert("Substitua este placeholder pelo seu link real: " + el.dataset.placeholder);
+    });
+  });
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // Destaca o item do menu conforme a seção atual.
+  const sections = [...document.querySelectorAll("main section[id]")];
+  const links = [...document.querySelectorAll(".nav-links a")];
+
+  const sectionObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + entry.target.id));
+      }
+    });
+  }, {rootMargin:"-35% 0px -55% 0px"});
+
+  sections.forEach(section => sectionObserver.observe(section));
+</script>
+</body>
+</html>
+'''
+
+path = Path("/mnt/data/index.html")
+path.write_text(html, encoding="utf-8")
+print(f"Arquivo criado: {path}")
